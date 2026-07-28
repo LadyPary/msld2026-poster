@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="title" content="Improving Hallucination Detection in Dialogue">
+  <meta name="description" content="We study how dialogue structure affects LLM-based hallucination detection, proposing dialogue-native transforms and ensemble methods that improve detection accuracy.">
+  <meta name="keywords" content="hallucination detection, dialogue, LLM, NLP, conversational AI">
+  <meta name="author" content="Parisa Rabbani, Dilek Hakkani-Tür">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Improving Hallucination Detection in Dialogue">
+  <meta property="og:description" content="We study how dialogue structure affects LLM-based hallucination detection, proposing dialogue-native transforms and ensemble methods.">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Improving Hallucination Detection in Dialogue">
+
+  <meta name="citation_title" content="Improving Hallucination Detection in Dialogue">
+  <meta name="citation_author" content="Rabbani, Parisa">
+  <meta name="citation_author" content="Hakkani-Tür, Dilek">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="Midwest Speech and Language Days (MSLD) 2026">
+
+  <title>Improving Hallucination Detection in Dialogue</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Improving Hallucination Detection in Dialogue</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://parisarabbani.github.io" target="_blank">Parisa Rabbani</a>,
+              </span>
+              <span class="author-block">
+                <a href="https://siebelschool.illinois.edu/about/people/all-faculty/dilekt" target="_blank">Dilek Hakkani-T&uuml;r</a>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Department of Computer Science, University of Illinois Urbana-Champaign</span>
+              <br>
+              <span class="publication-venue">MSLD 2026</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="static/pdfs/paper.pdf" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="static/pdfs/poster.pptx" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-image"></i></span>
+                    <span>Poster</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="https://nlp.cs.illinois.edu/msld.html" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-globe"></i></span>
+                    <span>MSLD 2026</span>
+                  </a>
+                </span>
+              </div>
+              <p class="poster-note">* The poster contains more recent results than the writeup.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstract / Overview -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Overview</h2>
+          <div class="content has-text-justified">
+            <p>
+              LLM-based hallucination detectors are typically evaluated on sentence- or passage-level benchmarks,
+              leaving their behavior on multi-turn dialogue largely unexplored. We study how <strong>dialogue structure</strong>
+              affects detection accuracy, finding that models invent speaker names, fabricate details, and lose track of
+              earlier turns as conversations grow longer.
+            </p>
+            <p>
+              We propose a suite of <strong>dialogue transformations</strong> and <strong>dialogue-native detection approaches</strong>
+              evaluated on the DiaHalu benchmark across seven detector LLMs (Claude-Haiku-4.5, GPT-5.4-nano, GPT-5.4-mini,
+              Qwen3-8B, Gemma-3-4B, Gemma-3-12B, Gemma-3-27B). Our analysis reveals that transforms preserving dialogue
+              structure improve detection, while those that flatten or remove it hurt performance.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Findings -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Key Findings</h2>
+          <div class="content has-text-justified">
+            <div class="findings">
+              <div class="finding-card">
+                <h4>Dialogue structure matters</h4>
+                <p>Transforms that simplify or remove dialogue structure (F1&ndash;F4, S2) hurt detection;
+                   transforms that preserve it (S3, S4, S7) help.</p>
+              </div>
+              <div class="finding-card">
+                <h4>Single-pass detection has blind spots</h4>
+                <p>Zero-shot detection misses dialogue-specific errors (overreliance, irrelevance)
+                   that exchange-level auditing catches.</p>
+              </div>
+              <div class="finding-card">
+                <h4>Complementarity beats sophistication</h4>
+                <p>The strongest detector is not a new method, but the OR ensemble of the simplest approach (ZS)
+                   and a dialogue-native auditor (Ckp+Rep).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hallucination Types -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Hallucination in Dialogue</h2>
+          <div class="content">
+            <div class="examples-grid">
+              <div class="example-card">
+                <span class="example-label factuality">Factuality</span>
+                <div class="dialogue">
+                  <p class="utterance speaker-a"><strong>A:</strong> How tall is Mount Everest?</p>
+                  <p class="utterance speaker-b hallucinated"><strong>B:</strong> About 5,000 feet.</p>
+                  <p class="utterance speaker-a"><strong>A:</strong> Shorter than I thought!</p>
+                  <p class="utterance speaker-b hallucinated"><strong>B:</strong> Yes, it surprises many people!</p>
+                </div>
+              </div>
+              <div class="example-card">
+                <span class="example-label faithfulness">Faithfulness</span>
+                <div class="dialogue">
+                  <p class="utterance speaker-a"><strong>A:</strong> I'm a vegan, I believe in treating all creatures with kindness.</p>
+                  <p class="utterance speaker-b"><strong>B:</strong> That sounds delicious! I'm always up for good food.</p>
+                  <p class="utterance speaker-a hallucinated"><strong>A:</strong> Shall we go get some beef tacos?</p>
+                  <p class="utterance speaker-b hallucinated"><strong>B:</strong> That's great! I'm vegan too.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3">Results</h2>
+
+          <div class="result-chart">
+            <img src="static/images/result_chart_62.png" alt="OR ensemble (ZS v Ckp+Rep) beats ZS on all 5 models">
+            <p class="chart-caption">OR-ensembling Zero-Shot with Checkpoints+Repetition yields significant F1 gains on all 5 models (+3 to +6 F1), while neither approach wins alone.</p>
+          </div>
+
+          <div class="results-row">
+            <div class="result-chart">
+              <img src="static/images/result_chart_60.png" alt="Per-hallucination-type recall (gpt-5.4-mini)">
+              <p class="chart-caption">Ckp+Rep beats ZS on 4 of 5 hallucination types; ZS dominates reasoning errors. The ensemble recovers both.</p>
+            </div>
+            <div class="result-chart">
+              <img src="static/images/result_chart_61.png" alt="Per-domain F1 (gpt-5.4-mini)">
+              <p class="chart-caption">OR ensemble wins 3 of 4 domains; ZS retains the lead on Reasoning.</p>
+            </div>
+          </div>
+
+          <div class="content has-text-justified" style="margin-top: 1.5rem;">
+            <div class="findings">
+              <div class="finding-card">
+                <h4>Complementary error profiles</h4>
+                <p>ZS dominates reasoning errors (+21 recall), Ckp+Rep wins on dialogue-specific errors like overreliance (+23 recall) and irrelevance (+10 recall); the ensemble recovers both.</p>
+              </div>
+              <div class="finding-card">
+                <h4>Near-symmetric disagreement</h4>
+                <p>64 hallucinations caught only by Ckp+Rep; 62 only by ZS. This confirms genuine complementarity rather than one method strictly dominating.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BibTeX -->
+  <section class="section hero is-light" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3 has-text-centered">BibTeX</h2>
+      <pre><code>@inproceedings{rabbani2026improving,
+  title={Improving Hallucination Detection in Dialogue},
+  author={Rabbani, Parisa and Hakkani-T{\"u}r, Dilek},
+  booktitle={Midwest Speech and Language Days (MSLD)},
+  year={2026}
+}</code></pre>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content has-text-centered">
+          <p>
+            This page was built using the
+            <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
+            Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -113,9 +113,80 @@
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
           <h2 class="title is-3">Dialogue Transformations</h2>
-          <div class="result-chart" style="margin-bottom: 1.5rem;">
-            <img src="static/images/dialogue_transforms.png" alt="Dialogue Transformations: Surface transforms (S1-S4) and Content transforms (F1-F4) with Win/Lose/NS results">
+          <div class="base-dialogue">
+            <h4>Base dialogue:</h4>
+            <div class="dialogue-box">
+              <p><strong>A:</strong> Have you heard this slogan? I can't remember what drinking Red Bull gives you.</p>
+              <p><strong>B:</strong> It can give you wings!</p>
+            </div>
           </div>
+
+          <div class="transforms-grid">
+            <div>
+              <h4 class="transform-heading surface">Surface Transforms</h4>
+              <div class="transform-card">
+                <h5>S1 Coreference resolution</h5>
+                <div class="dialogue-box">
+                  <p><strong>A:</strong> Have you heard this slogan? I can't remember what drinking Red Bull gives you. <strong>B:</strong> <span class="hl-red">Drinking Red Bull</span> can give you wings!</p>
+                </div>
+                <span class="wln neutral">Win: 0, Lose: 0, NS: 7</span>
+              </div>
+              <div class="transform-card">
+                <h5>S2 Formalization</h5>
+                <div class="dialogue-box">
+                  <p><strong>A:</strong> Have you heard this slogan? I <span class="hl-red">cannot recall</span> what drinking Red Bull <span class="hl-red">provides</span>.</p>
+                  <p><strong>B:</strong> It can <span class="hl-red">provide you with</span> wings.</p>
+                </div>
+                <span class="wln lose">Win: 0, Lose: 3, NS: 4</span>
+              </div>
+              <div class="transform-card">
+                <h5>S3 Turn concatenation</h5>
+                <div class="dialogue-box">
+                  <p>Have you heard this slogan? I can't remember what drinking Red Bull gives you. It can give you wings!</p>
+                </div>
+                <span class="wln win">Win: 2, Lose: 0, NS: 5</span>
+              </div>
+              <div class="transform-card">
+                <h5>S4 Dehumanization</h5>
+                <div class="dialogue-box">
+                  <p><span class="hl-red">AI Agent 1:</span> Have you heard this slogan? I can't remember what drinking Red Bull gives you. <span class="hl-red">AI Agent 2:</span> It can give you wings!</p>
+                </div>
+                <span class="wln win">Win: 2, Lose: 0, NS: 5</span>
+              </div>
+            </div>
+            <div>
+              <h4 class="transform-heading content">Content Transforms</h4>
+              <div class="transform-card">
+                <h5>F1 Flattening to prose</h5>
+                <div class="dialogue-box">
+                  <p>Person A cannot remember what drinking Red Bull gives you. In regard to the slogan, it can give you wings.</p>
+                </div>
+                <span class="wln lose">Win: 1, Lose: 2, NS: 4</span>
+              </div>
+              <div class="transform-card">
+                <h5>F2 Atomic claim decomposition</h5>
+                <div class="dialogue-box">
+                  <p>There is a slogan associated with drinking Red Bull.<br>The speaker cannot remember what drinking Red Bull gives you.<br>Drinking Red Bull can give you wings.</p>
+                </div>
+                <span class="wln lose">Win: 1, Lose: 3, NS: 3</span>
+              </div>
+              <div class="transform-card">
+                <h5>F3 Dialogue summarization</h5>
+                <div class="dialogue-box">
+                  <p>A1 mentioned not being able to remember the slogan related to drinking Red Bull. B1 responded that drinking Red Bull can give you wings.</p>
+                </div>
+                <span class="wln lose">Win: 0, Lose: 2, NS: 5</span>
+              </div>
+              <div class="transform-card">
+                <h5>F4 QA conversion</h5>
+                <div class="dialogue-box">
+                  <p><strong>Q:</strong> What does drinking Red Bull give you? <strong>A:</strong> Drinking Red Bull can give you wings.</p>
+                </div>
+                <span class="wln lose">Win: 1, Lose: 4, NS: 2</span>
+              </div>
+            </div>
+          </div>
+
           <div class="content has-text-justified">
             <p>
               We evaluated eight transformations (S1, S2, S3, S4, F1, F2, F3, F4) plus the base condition across all seven detector LLMs on 1,103 dialogues (~69,500 evaluations). Content transforms that remove dialogue structure consistently degraded detection: QA conversion (F4) showed the largest losses (Win: 1, Lose: 4, NS: 2), followed by atomic claim decomposition (F2; Win: 1, Lose: 3, NS: 3) and formalization (S2; Win: 0, Lose: 3, NS: 4). Flattening to prose (F1) and dialogue summarization (F3) also hurt performance. Coreference resolution (S1) was neutral (Win: 0, Lose: 0, NS: 7).
@@ -135,9 +206,68 @@
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
           <h2 class="title is-3">Dialog Native Approaches</h2>
-          <div class="result-chart" style="margin-bottom: 1.5rem;">
-            <img src="static/images/dialog_native_methods.png" alt="Dialog Native Approaches: Zero Shot, Inline Checkpoints, Checkpoints + Repetition, and Progressive Detection">
+          <div class="methods-grid">
+            <div class="method-card">
+              <h5>Zero Shot (ZS)</h5>
+              <p class="method-desc">Full dialogue, 1 call.</p>
+              <div class="dialogue-box small">
+                <p>A1: <em>user turn 1</em></p>
+                <p>B1: <em>response turn 1</em></p>
+                <p>A2: <em>user turn 2</em></p>
+                <p>B2: <em>response turn 2</em></p>
+              </div>
+              <div class="method-prompt">Does the dialogue contain a hallucination?</div>
+            </div>
+            <div class="method-card">
+              <h5>Inline Checkpoints (Ckp)</h5>
+              <p class="method-desc">Checkpoints after each full exchange, 1 call.</p>
+              <div class="dialogue-box small">
+                <p>A1: <em>user turn 1</em></p>
+                <p>B1: <em>response turn 1</em></p>
+              </div>
+              <div class="method-prompt">Does the dialogue contain a hallucination?</div>
+              <div class="dialogue-box small">
+                <p>A2: <em>user turn 2</em></p>
+                <p>B2: <em>response turn 2</em></p>
+              </div>
+              <div class="method-prompt">Does the dialogue contain a hallucination?</div>
+            </div>
+            <div class="method-card">
+              <h5>Checkpoints + Repetition (Ckp+Rep)</h5>
+              <p class="method-desc">Checkpoints with history repeated at each step, 1 call.</p>
+              <div class="dialogue-box small">
+                <p>A1: <em>user turn 1</em></p>
+                <p>B1: <em>response turn 1</em></p>
+              </div>
+              <div class="method-prompt">Does the dialogue contain a hallucination?</div>
+              <div class="dialogue-box small">
+                <p><strong>HISTORY:</strong></p>
+                <p>A1: <em>user turn 1</em></p>
+                <p>B1: <em>response turn 1</em></p>
+                <p><strong>NEW TURNS:</strong></p>
+                <p>A2: <em>user turn 2</em></p>
+                <p>B2: <em>response turn 2</em></p>
+              </div>
+              <div class="method-prompt">Does the dialogue contain a hallucination?</div>
+            </div>
+            <div class="method-card">
+              <h5>Progressive Detection (Exch)</h5>
+              <p class="method-desc">N independent calls, one per prefix; OR-aggregate.</p>
+              <div class="dialogue-box small">
+                <p>A1: <em>user turn 1</em></p>
+                <p>B1: <em>response turn 1</em></p>
+              </div>
+              <div class="method-prompt">Does the dialogue contain a hallucination?</div>
+              <div class="dialogue-box small">
+                <p>A1: <em>user turn 1</em></p>
+                <p>B1: <em>response turn 1</em></p>
+                <p>A2: <em>user turn 2</em></p>
+                <p>B2: <em>response turn 2</em></p>
+              </div>
+              <div class="method-prompt">Does the dialogue contain a hallucination?</div>
+            </div>
           </div>
+
           <div class="content has-text-justified">
             <div class="findings">
               <div class="finding-card">

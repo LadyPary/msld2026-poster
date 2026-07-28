@@ -113,6 +113,9 @@
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
           <h2 class="title is-3">Dialogue Transformations</h2>
+          <div class="result-chart" style="margin-bottom: 1.5rem;">
+            <img src="static/images/dialogue_transforms.png" alt="Dialogue Transformations: Surface transforms (S1-S4) and Content transforms (F1-F4) with Win/Lose/NS results">
+          </div>
           <div class="content has-text-justified">
             <p>
               We evaluated eight transformations (S1, S2, S3, S4, F1, F2, F3, F4) plus the base condition across all seven detector LLMs on 1,103 dialogues (~69,500 evaluations). Content transforms that remove dialogue structure consistently degraded detection: QA conversion (F4) showed the largest losses (Win: 1, Lose: 4, NS: 2), followed by atomic claim decomposition (F2; Win: 1, Lose: 3, NS: 3) and formalization (S2; Win: 0, Lose: 3, NS: 4). Flattening to prose (F1) and dialogue summarization (F3) also hurt performance. Coreference resolution (S1) was neutral (Win: 0, Lose: 0, NS: 7).
@@ -132,6 +135,9 @@
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
           <h2 class="title is-3">Dialog Native Approaches</h2>
+          <div class="result-chart" style="margin-bottom: 1.5rem;">
+            <img src="static/images/dialog_native_methods.png" alt="Dialog Native Approaches: Zero Shot, Inline Checkpoints, Checkpoints + Repetition, and Progressive Detection">
+          </div>
           <div class="content has-text-justified">
             <div class="findings">
               <div class="finding-card">
@@ -153,38 +159,6 @@
     </div>
   </section>
 
-  <!-- Hallucination Types -->
-  <section class="section hero is-light">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Hallucination in Dialogue</h2>
-          <div class="content">
-            <div class="examples-grid">
-              <div class="example-card">
-                <span class="example-label factuality">Factuality</span>
-                <div class="dialogue">
-                  <p class="utterance speaker-a"><strong>A:</strong> How tall is Mount Everest?</p>
-                  <p class="utterance speaker-b hallucinated"><strong>B:</strong> About 5,000 feet.</p>
-                  <p class="utterance speaker-a"><strong>A:</strong> Shorter than I thought!</p>
-                  <p class="utterance speaker-b hallucinated"><strong>B:</strong> Yes, it surprises many people!</p>
-                </div>
-              </div>
-              <div class="example-card">
-                <span class="example-label faithfulness">Faithfulness</span>
-                <div class="dialogue">
-                  <p class="utterance speaker-a"><strong>A:</strong> I'm a vegan, I believe in treating all creatures with kindness.</p>
-                  <p class="utterance speaker-b"><strong>B:</strong> That sounds delicious! I'm always up for good food.</p>
-                  <p class="utterance speaker-a hallucinated"><strong>A:</strong> Shall we go get some beef tacos?</p>
-                  <p class="utterance speaker-b hallucinated"><strong>B:</strong> That's great! I'm vegan too.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Results -->
   <section class="section">

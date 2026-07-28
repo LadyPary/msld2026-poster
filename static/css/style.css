@@ -91,7 +91,7 @@ body {
 .poster-note {
   margin-top: 1rem;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: #dc2626;
   font-style: italic;
 }
 

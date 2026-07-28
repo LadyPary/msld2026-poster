@@ -85,7 +85,7 @@
     </div>
   </section>
 
-  <!-- Abstract / Overview -->
+  <!-- Overview -->
   <section class="section hero is-light">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
@@ -93,16 +93,13 @@
           <h2 class="title is-3">Overview</h2>
           <div class="content has-text-justified">
             <p>
-              LLM-based hallucination detectors are typically evaluated on sentence- or passage-level benchmarks,
-              leaving their behavior on multi-turn dialogue largely unexplored. We study how <strong>dialogue structure</strong>
-              affects detection accuracy, finding that models invent speaker names, fabricate details, and lose track of
-              earlier turns as conversations grow longer.
+              We conducted two lines of mitigation experiments on DiaHalu across models.
             </p>
             <p>
-              We propose a suite of <strong>dialogue transformations</strong> and <strong>dialogue-native detection approaches</strong>
-              evaluated on the DiaHalu benchmark across seven detector LLMs (Claude-Haiku-4.5, GPT-5.4-nano, GPT-5.4-mini,
-              Qwen3-8B, Gemma-3-4B, Gemma-3-12B, Gemma-3-27B). Our analysis reveals that transforms preserving dialogue
-              structure improve detection, while those that flatten or remove it hurt performance.
+              <strong>Dialogue Transformations</strong> (Dataset: DiaHalu, Transformer LLM: GPT-4o mini, Detector LLMs: Claude-Haiku-4.5, GPT-5.4-nano, GPT-5.4-mini, Qwen3-8B, Gemma-3-4B, Gemma-3-12B, Gemma-3-27B): We applied surface-level and content-level transformations to dialogues before detection, testing whether restructuring the input (e.g., flattening, summarization, turn concatenation, dehumanization) improves or degrades hallucination detection.
+            </p>
+            <p>
+              <strong>Dialog Native Approaches</strong> (Dataset: DiaHalu, Detector LLMs: GPT-5.4-mini, GPT-5.4-nano, Qwen3-8B, Qwen3-32B, Gemma-3-27B): We evaluated detection strategies that operate over the dialogue structure itself, including inline checkpoints, checkpoints with history repetition, and progressive exchange-level detection, and compared them against standard zero-shot detection and their OR ensembles.
             </p>
           </div>
         </div>
@@ -110,28 +107,44 @@
     </div>
   </section>
 
-  <!-- Key Findings -->
+  <!-- Dialogue Transformations -->
   <section class="section">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
-          <h2 class="title is-3">Key Findings</h2>
+          <h2 class="title is-3">Dialogue Transformations</h2>
+          <div class="content has-text-justified">
+            <p>
+              We evaluated eight transformations (S1, S2, S3, S4, F1, F2, F3, F4) plus the base condition across all seven detector LLMs on 1,103 dialogues (~69,500 evaluations). Content transforms that remove dialogue structure consistently degraded detection: QA conversion (F4) showed the largest losses (Win: 1, Lose: 4, NS: 2), followed by atomic claim decomposition (F2; Win: 1, Lose: 3, NS: 3) and formalization (S2; Win: 0, Lose: 3, NS: 4). Flattening to prose (F1) and dialogue summarization (F3) also hurt performance. Coreference resolution (S1) was neutral (Win: 0, Lose: 0, NS: 7).
+            </p>
+            <p>
+              Structure-preserving transforms fared better: turn concatenation (S3) and dehumanization (S4) both showed gains (Win: 2, Lose: 0, NS: 5). One possible explanation for the limited overall effectiveness of the transformations is dataset staleness: DiaHalu was released in 2024, and current models may have encountered it during training, reducing its sensitivity as an evaluation benchmark. We plan to test these methods on our new dynamically generated benchmark to determine whether the transforms show stronger effects on unseen data.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dialog Native Approaches -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Dialog Native Approaches</h2>
           <div class="content has-text-justified">
             <div class="findings">
               <div class="finding-card">
-                <h4>Dialogue structure matters</h4>
-                <p>Transforms that simplify or remove dialogue structure (F1&ndash;F4, S2) hurt detection;
-                   transforms that preserve it (S3, S4, S7) help.</p>
+                <h4>OR ensemble consistently outperforms both individual approaches</h4>
+                <p>OR-ensembling Zero-Shot (ZS) with Checkpoints+Repetition (Ckp+Rep) yielded statistically significant F1 improvements over ZS alone on all five models (95% bootstrap CI), with gains ranging from +2.4 (GPT-5.4-nano) to +6.2 (Qwen3-8B). Inline Checkpoints (Ckp), Progressive Detection (Exch), and Ckp+Rep alone did not beat ZS on their own, yet the OR ensemble recovers the strengths of both.</p>
               </div>
               <div class="finding-card">
-                <h4>Single-pass detection has blind spots</h4>
-                <p>Zero-shot detection misses dialogue-specific errors (overreliance, irrelevance)
-                   that exchange-level auditing catches.</p>
+                <h4>ZS and Ckp+Rep are complementary, not redundant</h4>
+                <p>Per-hallucination-type recall on GPT-5.4-mini (n=1,103) reveals that ZS dominates on reasoning errors (0.937 vs. 0.732 recall), while Ckp+Rep outperforms ZS on four of five hallucination types, with the largest margins on overreliance (0.767 vs. 0.533, +23 recall) and irrelevance (0.397 vs. 0.302, +10 recall). The disagreement is near-symmetric: 64 hallucinations were caught only by Ckp+Rep and 62 only by ZS, confirming that single-pass detection has blind spots on dialogue-specific errors that exchange-level auditing catches.</p>
               </div>
               <div class="finding-card">
-                <h4>Complementarity beats sophistication</h4>
-                <p>The strongest detector is not a new method, but the OR ensemble of the simplest approach (ZS)
-                   and a dialogue-native auditor (Ckp+Rep).</p>
+                <h4>Domain-level analysis confirms complementary strengths</h4>
+                <p>Per-domain F1 on GPT-5.4-mini (n=1,103) shows the OR ensemble wins three of four domains: Chit-Chat (0.595 vs. ZS 0.544), Task-oriented (0.570 vs. ZS 0.446), and World Knowledge (0.737 vs. ZS 0.669). ZS retains the lead only on Reasoning (0.924 vs. OR 0.910), where its strong single-pass reasoning recall carries through. Ckp+Rep shows its largest individual advantage over ZS on Task-oriented (0.547 vs. 0.446), the domain most dependent on tracking multi-turn task state.</p>
               </div>
             </div>
           </div>
@@ -196,18 +209,6 @@
             </div>
           </div>
 
-          <div class="content has-text-justified" style="margin-top: 1.5rem;">
-            <div class="findings">
-              <div class="finding-card">
-                <h4>Complementary error profiles</h4>
-                <p>ZS dominates reasoning errors (+21 recall), Ckp+Rep wins on dialogue-specific errors like overreliance (+23 recall) and irrelevance (+10 recall); the ensemble recovers both.</p>
-              </div>
-              <div class="finding-card">
-                <h4>Near-symmetric disagreement</h4>
-                <p>64 hallucinations caught only by Ckp+Rep; 62 only by ZS. This confirms genuine complementarity rather than one method strictly dominating.</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
